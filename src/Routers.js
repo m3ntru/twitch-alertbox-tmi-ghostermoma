@@ -8,7 +8,7 @@ export default class Routers extends Component{
       <div style={{position: 'relative'}}>
         <div className="mainContent">
           <Switch>
-            <Route path="/twitch-alertbox-tmi" component={App}/>         
+            <Route path="/twitch-alertbox-tmi-ghostermoma" component={App}/>         
           </Switch>
           {/*<Route path="/login" component={LoginRegister} />*/}
         </div>

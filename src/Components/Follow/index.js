@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import parse from 'html-react-parser';
 import ReactPlayer from 'react-player'
-import './Donation.css';
+import './Follow.css';
 
-class Donation extends Component {
+class Follow extends Component {
 
-    
     componentDidUpdate(prevProps, prevState) {
-        if ((prevProps.username !== this.props.username) || (prevProps.message !== this.props.message)) { 
+        if (prevProps.username !== this.props.username) { 
             this.player.seekTo(parseFloat(0))
         }       
     }
@@ -17,7 +16,7 @@ class Donation extends Component {
     }
 
     render() {
-        const { username, donationAmount, message} = this.props;
+        const { username } = this.props;
         return (
             <div id="widget" className="widget-AlertBox" data-layout="banner">
                 {/* main alert box window */}
@@ -37,11 +36,9 @@ class Donation extends Component {
                         {/* alert message */}
                         <div id="alert-message" style={{fontSize: '32px', color: 'rgb(255, 255, 255)', fontFamily: 'Nunito', fontWeight: 600}}>
                         <span data-token="name" style={{color: 'rgb(210, 66, 166)', position: 'relative'}}>{username + ' '}</span>
-                        donated
-                        <span data-token="name" style={{color: 'rgb(210, 66, 166)', position: 'relative'}}>{donationAmount}</span>
+                            is now following!	
                         </div>
-                        <div id="alert-user-message" style={{fontWeight: 400, fontSize: '24px', color: 'rgb(255, 255, 255)', fontFamily: '"Open Sans"'}}> {parse(message)}</div>
-                    </div>
+                       </div>
                     </div>
                 </div>
                 </div>
@@ -51,4 +48,4 @@ class Donation extends Component {
 
 }
 
-export default Donation;
+export default Follow;

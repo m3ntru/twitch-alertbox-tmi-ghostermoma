@@ -3,20 +3,22 @@ import './App.css';
 import Cheer from './Components/Cheer';
 import Sub from './Components/Sub';
 import Donation from './Components/Donation';
+import Follow from './Components/Follow';
+import Host from './Components/Host';
 import Converter from './model/Converter'
 import AudioPlayer from 'react-audio-player';
-import SubSound from './sound/sub.mp3';
-import SubT3Sound from './sound/sub_t3.mp3';
-import SubSoundFast from './sound/sub_fast.mp3';
-import CheerSound from './sound/cheer.mp3';
+import SubSound from './sound/sound.ogg';
+import SubT3Sound from './sound/sound.ogg';
+import SubSoundFast from './sound/sound.ogg';
+import CheerSound from './sound/sound.ogg';
 import tmi from 'tmi.js'
 import SoundList from './SoundList';
 const io = require("socket.io-client");
 
 const gifCount = 40;
 const bgifCount = 25;
-const channelList = ['tetristhegrandmaster3', 'tgm3backend'];
-const cooldownNormal = [10000, 5000];
+const channelList = ['zatd93'];
+const cooldownNormal = [6000, 1000];
 //TODO
 const cooldownFast = [4000, 2000];
 const updateTimeLog = "2021/12/11 ver1";
@@ -33,6 +35,8 @@ class App extends Component {
     subState: false,
     cheerState: false,
     donationState: false,
+    followState: false,
+    hostState: false,
     user: '門特魯',
     bits: 0,
     message: '👲🤸',
@@ -48,7 +52,8 @@ class App extends Component {
     tmiUser: false,
     recallType: "",
     recallUser: "",
-    recallStatus: false
+    recallStatus: false,
+    hostType: false
   }
 
   componentDidMount() {
@@ -200,9 +205,82 @@ class App extends Component {
             soundUrl: playList,
             cheer: eventData.message[0].amount,
             emotes: processEmotes,
-            cheerImg: this.getRamdom(false),
+            cheerImg: Date.now(),
             donation: "",
             doodle: result.doodle
+          }
+          queue.push(data);
+          if (!this.state.running) {
+            this.setState({
+              running: true
+            })
+            this.alertExec();
+          }
+        }
+
+        if (eventData.type == 'follow') {
+          processEmotes = this.streamlabsEmotesFormatter(eventData.message[0].emotes);
+          playList = [];
+          playList.push(CheerSound);
+          data = {
+            type: 'f',
+            name: eventData.message[0].from,
+            user: eventData.message[0].from,
+            messageAll: '',
+            message: '',
+            soundUrl: playList,
+            cheerImg: Date.now(),
+            donation: "",
+          }
+          queue.push(data);
+          if (!this.state.running) {
+            this.setState({
+              running: true
+            })
+            this.alertExec();
+          }
+        }
+
+        if (eventData.type == 'host') {
+          processEmotes = this.streamlabsEmotesFormatter(eventData.message[0].emotes);
+          playList = [];
+          playList.push(CheerSound);
+          data = {
+            type: 'h',
+            name: eventData.message[0].name,
+            user: eventData.message[0].name,
+            messageAll: '',
+            message: '',
+            cheer: eventData.message[0].viewers,
+            soundUrl: playList,
+            cheerImg: Date.now(),
+            donation: "",
+            hostType: true
+          }
+          queue.push(data);
+          if (!this.state.running) {
+            this.setState({
+              running: true
+            })
+            this.alertExec();
+          }
+        }
+
+        if (eventData.type == 'raid') {
+          processEmotes = this.streamlabsEmotesFormatter(eventData.message[0].emotes);
+          playList = [];
+          playList.push(CheerSound);
+          data = {
+            type: 'h',
+            name: eventData.message[0].name,
+            user: eventData.message[0].name,
+            messageAll: '',
+            message: '',
+            cheer: eventData.message[0].raiders,
+            soundUrl: playList,
+            cheerImg: Date.now(),
+            donation: "",
+            hostType: false
           }
           queue.push(data);
           if (!this.state.running) {
@@ -229,9 +307,6 @@ class App extends Component {
     });
     client.connect().catch(console.error);
     client.on('subscription', (channel, username, method, message, userstate) => {
-      // console.log(username);
-      // console.log(method);
-      // console.log(userstate);
       if (method.plan == "3000") {
         var playList = [];
         var msg = "";
@@ -259,35 +334,8 @@ class App extends Component {
           this.alertExec();
         }
       }
-      // var playList = [];
-      // var msg = "";
-      // playList.push(SubSound);
-      // if (message != null) {
-      //   playList.push(this.getApiUrl(message));
-      //   msg = Converter.formatTwitchEmotes(message, userstate.emotes);
-      // }
-      // var data = {
-      //   type: 's',
-      //   user: username,
-      //   messageAll: msg,
-      //   message: [],
-      //   soundUrl: playList,
-      //   cheer: 0,
-      //   emotes: userstate.emotes,
-      //   cheerImg: 0
-      // }
-      // queue.push(data);
-      // if (!this.state.running) {
-      //   this.setState({
-      //     running: true
-      //   })
-      //   this.alertExec();
-      // }
     });
     client.on('resub', (channel, username, months, message, userstate, methods) => {
-      // console.log(username);
-      // console.log(methods);
-      // console.log(userstate);
       if (methods.plan == "3000") {
         var playList = [];
         var msg = "";
@@ -315,58 +363,7 @@ class App extends Component {
           this.alertExec();
         }
       }
-      // var playList = [];
-      // var msg = "";
-      // playList.push(SubSound);
-      // if (message != null && message != "") {
-      //   playList.push(this.getApiUrl(message));
-      //   msg = Converter.formatTwitchEmotes(message, userstate.emotes);
-      // }
-      // var data = {
-      //   type: 's',
-      //   user: username,
-      //   messageAll: msg,
-      //   message: [],
-      //   soundUrl: playList,
-      //   cheer: 0,
-      //   emotes: userstate.emotes,
-      //   cheerImg: 0
-      // }
-      // queue.push(data);
-      // if (!this.state.running) {
-      //   this.setState({
-      //     running: true
-      //   })
-      //   this.alertExec();
-      // }
     });
-    // client.on('cheer', (channel, userstate, message) => {
-    //   var result = Converter.formatText(message, [".", "!", "?", ":", ";", ",", " "], 90, userstate.emotes);
-    //   var bit = result.count;
-    //   var playList = [];
-    //   playList.push(CheerSound);
-    //   result.message.forEach(function (t) {
-    //     var result = "https://m3ntru-tts.herokuapp.com/api/TTS/one?text=".concat(encodeURIComponent(t).concat('&tl=cn'));
-    //     playList.push(result);
-    //   })
-    //   var data = {
-    //     type: 'c',
-    //     user: userstate['display-name'],
-    //     messageAll: result.display,
-    //     message: result.message,
-    //     soundUrl: playList,
-    //     cheer: userstate.bits,
-    //     emotes: userstate.emotes,
-    //     cheerImg: this.getRamdom()
-    //   }
-    //   queue.push(data);
-    //   if (!this.state.running) {
-    //     this.setState({
-    //       running: true
-    //     })
-    //     this.alertExec();
-    //   }
-    // });
 
     client.on("subgift", (channel, username, streakMonths, recipient, methods, userstate) => {
       //   var playList = [];
@@ -716,6 +713,8 @@ class App extends Component {
       subState: (current.type == 's') ? true : false,
       cheerState: (current.type == 'c') ? true : false,
       donationState: (current.type == 'd') ? true : false,
+      followState: (current.type == 'f') ? true : false,
+      hostState: (current.type == 'h') ? true : false,
       user: current.user,
       message: current.messageAll,
       bits: current.cheer,
@@ -723,7 +722,8 @@ class App extends Component {
       cheerImg: img,
       donationAmount: current.donation,
       subTier: (current.subTier) ? true : false,
-      subGift: current.subGift
+      subGift: current.subGift,
+      hostType: current.hostType
     })
     setTimeout(() => this.printEnd(), displayTime);
   }
@@ -733,7 +733,9 @@ class App extends Component {
     this.setState({
       subState: false,
       cheerState: false,
-      donationState: false
+      donationState: false,
+      followState: false,
+      hostState: false,
     })
     setTimeout(() => this.printCooldown(), (this.state.giftBoost && gift) ? cooldownFast[1] : cooldownNormal[1]);
   }
@@ -813,10 +815,16 @@ class App extends Component {
             <Sub username={this.state.user} message={this.state.message} subType={this.state.subTier} />
           </div>
           <div className={(this.state.cheerState) ? 'fadeIn' : 'fadeOut'}>
-            <Cheer username={this.state.user} message={this.state.message} bits={this.state.bits} cheerImg={this.state.cheerImg} />
+            <Cheer username={this.state.user} message={this.state.message} bits={this.state.bits} time={this.state.cheerImg} />
           </div>
           <div className={(this.state.donationState) ? 'fadeIn' : 'fadeOut'}>
             <Donation username={this.state.user} message={this.state.message} donationAmount={this.state.donationAmount} />
+          </div>
+          <div className={(this.state.followState) ? 'fadeIn' : 'fadeOut'}>
+            <Follow username={this.state.user}/>
+          </div>
+          <div className={(this.state.hostState) ? 'fadeIn' : 'fadeOut'}>
+            <Host username={this.state.user} type={this.state.hostType} count={this.state.bits}/>
           </div>
         </header>
         <AudioPlayer

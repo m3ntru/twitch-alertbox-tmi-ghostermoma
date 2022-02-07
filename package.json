@@ -1,8 +1,8 @@
 {
-  "name": "twitch-alertbox-tmi",
+  "name": "twitch-alertbox-tmi-ghostermoma",
   "version": "0.6.3",
   "private": true,
-  "homepage": "http://m3ntru.github.io/twitch-alertbox-tmi",
+  "homepage": "http://m3ntru.github.io/twitch-alertbox-tmi-ghostermoma",
   "dependencies": {
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
@@ -12,6 +12,7 @@
     "react": "^17.0.2",
     "react-audio-player": "^0.17.0",
     "react-dom": "^17.0.2",
+    "react-player": "^2.9.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "socket.io-client": "^2.3.1",
@@ -48,11 +49,11 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TechGuaMaster3/twitch-alertbox-tmi.git"
+    "url": "git+https://github.com/TechGuaMaster3/twitch-alertbox-tmi-ghostermoma.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TechGuaMaster3/twitch-alertbox-tmi/issues"
+    "url": "https://github.com/TechGuaMaster3/twitch-alertbox-tmi-ghostermoma/issues"
   }
 }
